@@ -1,5 +1,5 @@
 from telegram import Update
-from telegram.ext import Application, CommandHandler, ContextTypes
+from telegram.ext import Updater, CommandHandler
 import random
 import json
 import os
@@ -66,14 +66,16 @@ async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 def main():
-    app = Application.builder().token(TOKEN).build()
+    updater = Updater(TOKEN, use_context=True)
+    dp = updater.dispatcher
 
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("growbooty", grow))
-    app.add_handler(CommandHandler("stats", stats))
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("gymgrow", grow))  # or your command
+    dp.add_handler(CommandHandler("stats", stats))
 
     print("Bot is running...")
-    app.run_polling()
+    updater.start_polling()
+    updater.idle()
 
 if __name__ == "__main__":
     main()
